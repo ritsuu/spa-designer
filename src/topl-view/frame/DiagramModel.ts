@@ -16,7 +16,7 @@ import {PinModel} from "../pin/PinModel";
 import {createConModel} from "../ToplUtil";
 import ToplComModelForked from "../com/ToplComModelForked";
 import {Arrays, getPosition} from "@utils";
-import {SerializeNS} from '../../constants'
+import {SerializeNS} from "../constants";
 
 @Serializable(SerializeNS + 'topl.DiagramModel')
 export default class DiagramModel extends BaseModel {

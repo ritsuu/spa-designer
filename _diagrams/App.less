@@ -1,0 +1,91 @@
+﻿.mainView {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .titleBar {
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    border-bottom: 1px solid #DDD;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    background-image: linear-gradient(#fff,#F3F3F3);
+
+    .logo {
+      width: 240px;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      font-size: 20px;
+
+      i {
+        font-weight: bold;
+        color:red;
+      }
+
+      span {
+        color: #777;
+        font-size: 12px;
+        margin-left: 10px;
+        margin-top: 3px;
+      }
+    }
+
+    .btnsLeft {
+      //width: 170px;
+      display: flex;
+    }
+
+    .btnsHandlers {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .btnsDebug {
+      //width: 180px;
+    }
+
+    .btnsRight {
+      width: 240px;
+      justify-content: flex-end;
+    }
+
+    button {
+      //font-family: inherit;
+      //font-size: 100%;
+      line-height: 1;
+      margin: 2px;
+      padding: 3px 6px;
+      cursor: pointer;
+      background-color: #fff;
+      border: 1px solid #AAA;
+      border-radius: 1px;
+    }
+
+    .btnGroup {
+      position: relative;
+    }
+
+    .btnMenu {
+      z-index: 1000;
+      width: 150px;
+      position: absolute;
+      left: 3px;
+      display: none;
+      background-color: #fff;
+      border: 1px solid #AAA;
+      padding: 2px;
+
+      .menuItem {
+        height: 30px;
+        line-height: 30px;
+        padding: 0px 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}
