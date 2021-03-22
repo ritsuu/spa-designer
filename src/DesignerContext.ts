@@ -86,15 +86,15 @@ export default abstract class DesignerContext {
     this.showMode = 'normal'
   }
 
-  // _designerVersion: number = 0
-  //
-  // get useLatestFeatures() {
-  //   const mode = this.configs.mode
-  //   if (mode && mode === 'dev') {
-  //     return false
-  //   }
-  //   return this._designerVersion >= DesignerContext.DESIGNER_VERSION
-  // }
+  _designerVersion: number = 0
+  
+  get useLatestFeatures() {
+    const mode = this.configs.mode
+    if (mode && mode === 'dev') {
+      return false
+    }
+    return this._designerVersion >= DesignerContext.DESIGNER_VERSION
+  }
 
   //----------------------------------------------------------------------------
 

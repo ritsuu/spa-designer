@@ -406,6 +406,15 @@ function genLoadedObj(designerContext: DesignerContext, myContext: MyContext) {
       })
       return hd
     }),
+    importProject(content) {
+      if (content['pageAry']) {//导出
+        myContext.pageAry = content['pageAry']
+        myContext.emitLogs.info(`导入数据完成.`)
+        return true
+      } else {
+        myContext.emitLogs.error('导入数据失败', '非法的数据格式.')
+      }
+    },
     dump(): { [p: string]: {} } {
       return {
         pageAry: [{

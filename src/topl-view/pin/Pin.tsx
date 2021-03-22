@@ -22,6 +22,7 @@ import {ComContext} from "../com/ToplCom";
 import {ToplComModel} from "../com/ToplComModel";
 import I_Configurable = NS_Configurable.I_Configurable;
 import Start from "./start/Start";
+import DiagramModel from "../frame/DiagramModel";
 
 require('./PinModelForked')
 
@@ -135,7 +136,7 @@ function mousedown(e) {
 
   const rootFrame: FrameModel = model.getRoot(now => !now.parent || now instanceof FrameModel && now._rootF)
 
-  const rootContainer: FrameModel = rootFrame
+  const rootContainer: FrameModel | DiagramModel = rootFrame.focusedDiagram || rootFrame
 
   dragable(e, ({po: {x, y}, epo: {ex, ey}, targetStyle}, state) => {
       if (state == 'start') {
@@ -207,10 +208,14 @@ function connect(from: PinModel, snap) {
         fromFrame = from.parent
       } else {
         const com: ToplComModel = from.parent
-        fromFrame = com.parent
+        if(com.parent instanceof DiagramModel){
+          fromFrame = com.parent.parent
+        }else{
+          fromFrame = com.parent
+        }
       }
 
-      const fromContainer: FrameModel = fromFrame
+      const fromContainer: FrameModel | DiagramModel = fromFrame.focusedDiagram || fromFrame
       const fromFramePo = getPosition(fromContainer.$el)
 
       let toFrame: FrameModel
@@ -218,10 +223,14 @@ function connect(from: PinModel, snap) {
         toFrame = to.parent
       } else {
         const com: ToplComModel = to.parent
-        toFrame = com.parent
+        if(com.parent instanceof DiagramModel){
+          toFrame = com.parent.parent
+        }else{
+          toFrame = com.parent
+        }
       }
 
-      const toContainer = toFrame
+      const toContainer = toFrame.focusedDiagram || toFrame
       //console.log(toFrame.focusDiagram)
       const toFramePo = getPosition(toContainer.$el)
 

@@ -21,7 +21,7 @@ const btnStyle = {
   boxShadow: '0 1px 3px -1px #AAA'
 }
 
-export default function ({title, value, options}) {
+export default function Scratch ({title, value, options}) {
   const emitViews = useObservable(NS_Emits.Views, {expectTo: 'parents'})
 
   const open = useCallback(() => {
@@ -41,3 +41,5 @@ export default function ({title, value, options}) {
     <button style={btnStyle} onClick={evt(open).stop}>编辑Scratch</button>
   )
 }
+
+Scratch.showTitle = false

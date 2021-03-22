@@ -7,7 +7,7 @@ import {useComputed, useObservable} from '@mybricks/rxui';
 
 import designerCfg from './config'
 
-import {getLocationSearch} from "./utils";
+import {getLocationSearch, copyText, isJSON} from "./utils";
 import {LS_DEFAULT_KEY, LS_VB_PRE} from "./constants";
 
 export default function App() {
@@ -15,6 +15,7 @@ export default function App() {
   const loaded = useObservable(class {
     handlers//按钮
     dump//保存时获取当前设计内容的函数
+    importProject//导入项目
   })
 
   useMemo(() => {
@@ -38,10 +39,11 @@ export default function App() {
       <TitleBar loaded={loaded}/>
       {/*设计器*/}
       <Designer config={designerCfg}
-                onLoad={({handlers, dump}) => {
+                onLoad={({handlers, dump, importProject}) => {
                   //赋值到响应式对象
                   loaded.handlers = handlers
                   loaded.dump = dump
+                  loaded.importProject = importProject
                 }}
                 onMessage={(type, msg) => {
                   //对设计过程中产生的消息进行处理
@@ -99,6 +101,8 @@ function TitleBar({loaded}) {
       <div className={css.btnsRight}>
         {rightBtns}
         <button onClick={() => save(loaded)}>保存</button>
+        <button onClick={() => imoprtData(loaded)}>导入</button>
+        <button onClick={() => exportData(loaded)}>导出</button>
         {/*<button onClick={publish}>发布</button>*/}
       </div>
     </div>
@@ -120,4 +124,34 @@ function save(loaded) {
   const searchParam = getLocationSearch()
   localStorage.setItem(`${LS_VB_PRE}${searchParam.length ? getLocationSearch() : LS_DEFAULT_KEY}`, JSON.stringify(dumpContent));
   message.info('保存完成.')
+}
+
+function exportData(loaded) {
+  const dumpContent = loaded.dump()
+
+  if (copyText(JSON.stringify(dumpContent))) {
+    message.info('已导出数据到剪切板.')
+  }
+}
+
+function imoprtData(loaded) {
+  const resData = window.prompt()
+
+  if (typeof resData === 'string' && !resData.length) {
+    message.warning('请输入需要导入的内容', 1)
+    return
+  } else if (!resData) return
+  if (!isJSON(resData)) {
+    message.warning('导入的内容格式不正确', 1)
+    return
+  }
+
+  const dumpContent = JSON.parse(resData);
+  const rtn = loaded.importProject(dumpContent)
+
+  if (rtn) {
+    message.info('导入数据完成.')
+  } else {
+    message.info('导入数据失败.')
+  }
 }

@@ -23,6 +23,7 @@ import {alignToCanvasGrid} from "../ToplUtil";
 import {PinModel} from "../pin/PinModel";
 import Pin from "../pin/Pin";
 import FrameModel from "../frame/FrameModel";
+import DiagramModel from '../frame/DiagramModel'
 import Block from "./block/Block";
 import ToplComModelForked from "./ToplComModelForked";
 import Start from "./start/Start";
@@ -280,6 +281,7 @@ export function mouseDown(evt) {
   if (context.isDebugMode()) {
     return
   }
+  const modelPo = getPosition(model.$el)
 
   let snap, parentPo, dragToFrame
   dragable(evt,
@@ -287,16 +289,31 @@ export function mouseDown(evt) {
       if (state === 'start') {
         snap = emitSnap.start('moveItems')
         if (model.parent instanceof FrameModel) {
-          parentPo = getPosition(model.parent.$el)
+          if (model.parent.focusedDiagram) {
+            parentPo = getPosition(model.parent.focusedDiagram.$el)
+          } else {
+            parentPo = getPosition(model.parent.$el)
+          }
         } else {
-          parentPo = getPosition(model.parent.$el)
+          if (model.parent instanceof DiagramModel) {
+            if (model.parent.$el) {
+              parentPo = getPosition(model.parent.$el)
+            } else {
+              parentPo = getPosition(model.parent.parent.$el)
+            }
+          } else {
+            parentPo = getPosition(model.parent.$el)
+          }
         }
         return
       }
 
       const nx = alignToCanvasGrid(x - parentPo.x),
         ny = alignToCanvasGrid(y - parentPo.y)
-      if (nx <= 0 || ny <= 0) {
+      const mx = alignToCanvasGrid((parentPo.x + parentPo.w) - (x + modelPo.w)),
+        my = alignToCanvasGrid((parentPo.y + parentPo.h) - (y + modelPo.h))
+
+      if (nx <= 0 || ny <= 0 || mx <= 10 || my <= 10) {
         return
       }
       if (nx !== model.style.left || ny !== model.style.top) {
